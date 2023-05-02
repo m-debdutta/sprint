@@ -1,39 +1,84 @@
-const memory = [1, 7, 3, 9, 9]; 
+const assert= require('assert');
 
-const instructionList = {
-  1: {name: 'add', space: 4} 
+const put = function(pc, program) {
+  const resultAddress = program[pc + 2]; 
+  program[resultAddress] = program[pc + 1]; 
+  return pc + 3; 
+}
+
+const addition = function(pc, program) {
+  const resultAddress = program[pc + 3]; 
+  program[resultAddress] = program[pc + 1] + program[pc + 2]; 
+  return pc + 4; 
 }; 
 
-const getNextIndex = function(currentIndex) {
-  if(memory[currentIndex] === 1) {
-    return currentIndex + 4; 
-  }
-  if(memory[currentIndex] === 9) {
-    return currentIndex; 
-  }
+const substract = function(pc, program) {
+  const resultAddress = program[pc + 3]; 
+  program[resultAddress] = program[pc + 1] - program[pc + 2]; 
+  return pc + 4; 
+}; 
+
+const jump = function(pc, program) {
+  return program[pc + 1] - 1;
+}; 
+
+const jumpEqual = function(pc, program) {
+  const valueOfLocation1 = program[program[pc + 1]]; 
+  const valueOfLocation2 = program[program[pc + 2]]; 
+  return valueOfLocation1 === valueOfLocation2 ? program[pc + 3] : pc + 4; 
+}; 
+
+const jumpLessThan = function(pc, program) {
+  const valueOfLocation1 = program[program[pc + 1]]; 
+  const valueOfLocation2 = program[program[pc + 2]]; 
+  return valueOfLocation1 < valueOfLocation2 ? program[pc + 3] : pc + 4; 
+}; 
+
+const copy = function(pc, program) {
+  program[program[pc + 2]] = program[program[pc + 1]]; 
+  return pc + 3; 
 }
 
-const performTask = function(currentIndex, currentInstruction) {
-  const sum = memory[currentIndex + 1] + memory[currentIndex + 2]; 
-  memory[memory[currentIndex + 3]] = sum; 
-  return memory; 
-}
+const halt = function(pc, program) {
+  return pc; 
+}; 
 
-const sprint = function() {
-  let currentIndex = 0; 
-  let nextIndex = 0; 
+const instructionSet = {
+  0: put, 
+  1: addition,  
+  2: substract, 
+  3: jump,
+  4: jumpEqual, 
+  5: jumpLessThan, 
+  7: copy, 
+  9: halt
+}; 
+
+const executeInstruction = function(env) {
+  if(!(env.instruction in instructionSet)) {
+    assert.fail(env.instruction, 'INVALID COMMAND'); 
+  }
+  env.pc = instructionSet[env.instruction](env.pc, env.program);
+  return env; 
+}; 
+
+const sprint = function(sprintCode) {
+  const env = {
+    pc: 0, 
+    program: sprintCode.slice(),  
+    instruction: 0,
+    execution: true 
+  }; 
 
   do {
-    currentIndex = nextIndex; 
-    nextIndex = getNextIndex(currentIndex); 
-    instruction = memory[currentIndex]; 
+    env.instruction = env.program[env.pc]; 
+    executeInstruction(env); 
+  } while(env.instruction !== 9 && env.execution === true) 
 
-    if(instruction !== 9) {
-      performTask(currentIndex, instruction); 
-    }
+  return env.program; 
+}; 
 
-  } while(instruction !== 9) 
-  return memory; 
-}
-
-console.log(sprint()); 
+console.log(sprint([1, 4, 3, 5, 9]), 'addition'); 
+console.log(sprint([2, 4, 3, 5, 9]), 'substraction'); 
+console.log(sprint([1, 1, 9, 10, 3, 3]), 'jump'); 
+console.log(sprint([1, 1, 9, 10, 8, 1, 2, 9]), 'copy'); 
