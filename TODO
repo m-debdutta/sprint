@@ -1,0 +1,70 @@
+Making sprint
+
+Q: What is sprint?
+
+-> It is a numberic based programing language that has instruction in form of numbers.
+Sprint share the space for running memory and to store code.
+
+Q: What is an instruction?
+
+-> Instructions are special set of numbers which has special meaning associated to it.
+Each instruction takes certain number of arguments.
+The next instruction location is stored in a pointer.
+
+Q: How does sprint works?
+
+-> It takes the value of the location in the pointer.
+Then interpret it to know what instruction to perform.
+And then the pointer is re-set to the new instruction location.
+
+This continues until it find a proper instruction to stop or the program ends.
+
+Q: What is a program?
+
+-> A sprint program is a line of numbers of which some are instructions and some are arguments
+
+Q: What is output of a program?
+
+-> The output of a sprint program is a list of number which contain the program and aslo the output.
+
+Q: How one command will texecute?
+
+-> The main program will first take the value of the memory location present in the pointer.
+Interpret the number to a valid instruction.
+Run the intruction using the numbers next to it as arguments.
+Update the pointer.
+
+Q: What is a state?
+
+-> It is the content of memory at any point of time during the execution of a program.
+
+Q: How to update/maintain state?
+
+-> The state will be updated by the instructions directly. That is each command or instruction will change the state of the program directly during the time of execution.
+
+Q: What is a pointer?
+
+-> a pointer is variable that stores the memory location of the next instruction that need to run in a program.
+
+Q: What can we do with a pointer.
+
+-> move a pointer to somewhere.
+move a pointer by some value.
+get the pointer value.
+
+Q: How to access a pointer?
+
+-> pointer = new Pointer()
+pointer.moveTO(location)
+pointer.moveBy(location)
+pointer.getValue()
+
+Q: How will the sprint code look like?
+
+-> [1,24,26,9,3,4]
+
+Q: What can we do with a sprint program?
+
+-> load
+run/execute
+show state
